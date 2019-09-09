@@ -58,8 +58,7 @@ def tcp_port_scanner():
 	print('Scanning Completed in: ', total)
 
 
-
-def host_discovery(address:list):
+def host_discovery(address: list):
 	"""	
 	WORKS FOR SINGLE AND MULTIPLE IP's
 	"""
@@ -67,11 +66,14 @@ def host_discovery(address:list):
 	for addr in address:
 		res = subprocess.call(['ping', '-q', '-c', '3', addr], stdout=FNULL) 
 		if res == 0: 
-			print( addr, "UP") 
+			temp = addr, "UP"
+			return [[temp]]
 		elif res == 2: 
-			print("no response from", addr) 
+			temp = "no response from", addr
+			return [[temp]]
 		else: 
-			print(addr, "DOWN")
+			temp = addr, "DOWN"
+			return [[temp]]
 
 
 def host_discovery_subnet(host_subnet:str):
@@ -89,7 +91,7 @@ def udp_port_scanner(hosts:list):
 	for host in hosts:
 		os = subprocess.check_output(['nmap', '-sV', host])
 		output_list = str(os).split('\\n')
-		print(output_list)
+		return [[output_list]]
 
 
 def udp_port_scanner_subnet(host_subnet:str):
@@ -108,7 +110,7 @@ def os_detection(hosts:list):
 		os = subprocess.check_output(['sudo', 'nmap', '-O', host])
 		for line in str(os).split('\\n'):
 			if line.startswith('Running') or line.startswith('Aggressive'):
-				print(line)
+				return [[line]]
 
 
 def os_detection_subnet(host_subnet:str):
@@ -126,7 +128,7 @@ def service_detection(hosts:list):
 	for host in hosts:
 		os = subprocess.check_output(['nmap', '-sV', host])
 		output_list = str(os).split('\\n')
-		print(output_list)
+		return [[output_list]]
 
 
 def service_detection_subnet(host_subnet:str):
