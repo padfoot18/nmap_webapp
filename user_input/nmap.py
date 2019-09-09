@@ -11,10 +11,12 @@ subprocess.call('clear', shell=True)
 def tcp_port_scanner(remoteServer:list):
 	t1 = datetime.now()
 	output = []
+	command = []
 	for host in remoteServer:
 		remoteServerIP  = socket.gethostbyname(host)
+		command.append('nmap -sT ' + host)
 		try:
-			for port in range(1,1024):
+			for port in range(1, 1024):
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				result = sock.connect_ex((remoteServerIP, port))
 				if result == 0:
@@ -27,7 +29,7 @@ def tcp_port_scanner(remoteServer:list):
 		t2 = datetime.now()
 		time = t2-t1
 		output.append(f'Scanning completed in {time}')
-		return output
+		return output, command
 
 
 def tcp_scanner_subnet(host_subnet:str):
@@ -43,9 +45,11 @@ def host_discovery(address: list):
 	WORKS FOR SINGLE AND MULTIPLE IP's
 	"""
 	output = []
+	command =[]
 	FNULL = open(os.devnull, 'w')
 	for addr in address:
-		res = subprocess.call(['ping', '-q', '-c', '3', addr], stdout=FNULL) 
+		res = subprocess.call(['ping', '-q', '-c', '3', addr], stdout=FNULL)
+		command.append('nmap -sL ' + addr)
 		if res == 0: 
 			temp = addr, "UP"
 			output.append([temp])
@@ -55,7 +59,7 @@ def host_discovery(address: list):
 		else: 
 			temp = addr, "DOWN"
 			output.append([temp])
-	return output
+	return output, command
 
 
 def host_discovery_subnet(host_subnet:str):
@@ -71,11 +75,13 @@ def udp_port_scanner(hosts:list):
 	WORKS FOR SINGLE AND MULTIPLE IP's
 	"""
 	output = []
+	command = []
 	for host in hosts:
-		os = subprocess.check_output(['nmap', '-sV', host])
+		os = subprocess.check_output(['nmap', '-sU', host])
+		command.append('nmap -sU ' + host)
 		output_list = str(os).split('\\n')
-		output.append([output_list])
-	return output
+		output.append([output_list[2:]])
+	return output, command
 
 
 def udp_port_scanner_subnet(host_subnet:str):
@@ -91,12 +97,14 @@ def os_detection(hosts:list):
 	WORKS FOR SINGLE AND MULTIPLE IP's
 	"""
 	output = []
+	command = []
 	for host in hosts:
 		os = subprocess.check_output(['sudo', 'nmap', '-O', host])
+		command.append('sudo nmap -O ' + host)
 		for line in str(os).split('\\n'):
 			if line.startswith('Running') or line.startswith('Aggressive'):
 				output.append([line])
-	return output
+	return output, command
 
 
 def os_detection_subnet(host_subnet:str):
@@ -112,11 +120,13 @@ def service_detection(hosts:list):
 	WORKS FOR SINGLE AND MULTIPLE IP's
 	"""
 	output = []
+	command = []
 	for host in hosts:
 		os = subprocess.check_output(['nmap', '-sV', host])
+		command.append('nmap -sV ' + host)
 		output_list = str(os).split('\\n')
-		output.append([output_list])
-	return output
+		output.append([output_list[2:9]])
+	return output, command
 
 
 def service_detection_subnet(host_subnet:str):
