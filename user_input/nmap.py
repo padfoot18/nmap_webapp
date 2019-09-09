@@ -13,6 +13,7 @@ def tcp_port_scanner(remoteServer:list):
 	output = []
 	command = []
 	for host in remoteServer:
+		temp = []
 		remoteServerIP = socket.gethostbyname(host)
 		command.append('nmap -sT ' + host)
 		try:
@@ -20,7 +21,7 @@ def tcp_port_scanner(remoteServer:list):
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				result = sock.connect_ex((remoteServerIP, port))
 				if result == 0:
-					output.append("Port {}: 	 Open".format(port))
+					temp.append("Port {}: Open".format(port))
 				sock.close()
 		except socket.gaierror:
 			return ['Hostname could not be resolved. Exiting']
@@ -28,8 +29,9 @@ def tcp_port_scanner(remoteServer:list):
 			return ["Couldn't connect to server"]
 		t2 = datetime.now()
 		time = t2-t1
-		output.append(f'Scanning completed in {time}')
-		return output, command
+		temp.append(f'Scanning completed in {time}')
+		output.append(temp)
+	return output, command
 
 
 def tcp_scanner_subnet(host_subnet:str):
@@ -51,13 +53,13 @@ def host_discovery(address: list):
 		res = subprocess.call(['ping', '-q', '-c', '3', addr], stdout=FNULL)
 		command.append('nmap -sL ' + addr)
 		if res == 0: 
-			temp = addr, "UP"
+			temp = addr + " is UP"
 			output.append([temp])
 		elif res == 2: 
 			temp = "no response from", addr
 			output.append([temp])
 		else: 
-			temp = addr, "DOWN"
+			temp = addr + " is DOWN"
 			output.append([temp])
 	return output, command
 
@@ -80,7 +82,7 @@ def udp_port_scanner(hosts:list):
 		os = subprocess.check_output(['nmap', '-sU', host])
 		command.append('nmap -sU ' + host)
 		output_list = str(os).split('\\n')
-		output.append([output_list[2:]])
+		output.append('\n'.join(output_list[5:-2]))
 	return output, command
 
 
@@ -125,7 +127,7 @@ def service_detection(hosts:list):
 		os = subprocess.check_output(['nmap', '-sV', host])
 		command.append('nmap -sV ' + host)
 		output_list = str(os).split('\\n')
-		output.append([output_list[2:9]])
+		output.append('\n'.join(output_list[5:10]))
 	return output, command
 
 
