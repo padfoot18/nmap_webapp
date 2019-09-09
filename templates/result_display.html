@@ -11,6 +11,11 @@
         </ul>
     </div>
     <div>
+        {% for line in command %}
+            <b>Corresponding nmap command:</b> {{ line }}<br>
+        {% endfor %}
+    </div>
+    <div>
     <ul class="list-unstyled">
         {% for line in result %}
             {{ line }} <br>
