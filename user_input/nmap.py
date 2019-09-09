@@ -5,57 +5,36 @@ import os
 from datetime import datetime
 from netaddr import IPNetwork
 
-
-# Clear the screen
 subprocess.call('clear', shell=True)
 
 
-def tcp_port_scanner():
-	# Ask for input
-	remoteServer    = input("Enter a remote host to scan: ")
-	remoteServerIP  = socket.gethostbyname(remoteServer)
-
-	# Print a nice banner with information on which host we are about to scan
-	print("-" * 60)
-	print("Please wait, scanning remote host", remoteServerIP)
-	print("-" * 60)
-
-	# Check what time the scan started
+def tcp_port_scanner(remoteServer:list):
 	t1 = datetime.now()
+	for host in remoteServer:
+		remoteServerIP  = socket.gethostbyname(host)
+		try:
+			for port in range(1,1024):
+				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+				result = sock.connect_ex((remoteServerIP, port))
+				if result == 0:
+					print("Port {}: 	 Open".format(port))
+				sock.close()
+		except socket.gaierror:
+			print('Hostname could not be resolved. Exiting')
+			sys.exit()
+		except socket.error:
+			print("Couldn't connect to server")
+			sys.exit()
+		t2 = datetime.now()
+		time = t2-t1
 
-	# Using the range function to specify ports (here it will scans all ports between 1 and 1024)
 
-	# We also put in some error handling for catching errors
-
-	try:
-		for port in range(1,1025):  
-			sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-			result = sock.connect_ex((remoteServerIP, port))
-
-			if result == 0:
-				print("Port {}: 	 Open".format(port))
-			sock.close()
-
-	except KeyboardInterrupt:
-		print("You pressed Ctrl+C")
-		sys.exit()
-
-	except socket.gaierror:
-		print('Hostname could not be resolved. Exiting')
-		sys.exit()
-
-	except socket.error:
-		print("Couldn't connect to server")
-		sys.exit()
-
-	# Checking the time again
-	t2 = datetime.now()
-
-	# Calculates the difference of time, to see how long it took to run the script
-	total =  t2 - t1
-
-	# Printing the information to screen
-	print('Scanning Completed in: ', total)
+def tcp_scanner_subnet(host_subnet:str):
+	"""
+	WORKS FOR A SUBNET
+	"""
+	for ip in IPNetwork(host_subnet):
+		tcp_port_scanner([str(ip)])
 
 
 def host_discovery(address: list):
