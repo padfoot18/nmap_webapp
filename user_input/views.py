@@ -79,5 +79,4 @@ def display_result(request):
                     output, command = nmap.service_detection_subnet(host_name)
 
     # noinspection PyUnboundLocalVariable
-    return render(request, 'result_display.html', context={'data': [scan_type, host_name, host_type],
-                                                           'result': output, 'command': command})
+    return render(request, 'result_display.html', context={'result': zip(output, command)})

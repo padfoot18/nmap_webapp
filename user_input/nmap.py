@@ -13,7 +13,7 @@ def tcp_port_scanner(remoteServer:list):
 	output = []
 	command = []
 	for host in remoteServer:
-		remoteServerIP  = socket.gethostbyname(host)
+		remoteServerIP = socket.gethostbyname(host)
 		command.append('nmap -sT ' + host)
 		try:
 			for port in range(1, 1024):

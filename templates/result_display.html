@@ -3,25 +3,26 @@
     <div>
     <h3>Results:</h3>
     </div>
+
     <div>
-        <ul>
-            {% for input in data %}
-              <li>{{ input }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div>
-        {% for line in command %}
-            <b>Corresponding nmap command:</b> {{ line }}<br>
-        {% endfor %}
-    </div>
-    <div>
-    <ul class="list-unstyled">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Output</th>
+          <th scope="col">Corresponding nmap command</th>
+        </tr>
+      </thead>
+      <tbody>
         {% for line in result %}
-            {{ line }} <br>
+            <tr>
+            <td>{{ line.0 }}</td>
+            <td>{{ line.1 }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+      </tbody>
+    </table>
     </div>
+
     <div>
         <a href="/"><button class="btn btn-primary">Scan Again</button></a>
     </div>
