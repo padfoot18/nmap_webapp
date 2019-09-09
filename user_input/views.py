@@ -37,24 +37,28 @@ def display_result(request):
             scan_type = form.cleaned_data['scan_type']
             host_type = form.cleaned_data['host_type']
             host_name = form.cleaned_data['host_name']
-            port = form.cleaned_data['port']
 
             if scan_type == 'hd':
                 if host_type == 'single':
                     output = nmap.host_discovery([host_name])
                 elif host_type == 'multiple':
-                    output = nmap.host_discovery(host_name)
+                    output = nmap.host_discovery(host_name.strip().split(' '))
                 elif host_type == 'sub':
                     output = nmap.host_discovery_subnet(host_name)
 
             elif scan_type == 'tcp':
-                output = nmap.tcp_port_scanner()
+                if host_type == 'single':
+                    output = nmap.tcp_port_scanner([host_name])
+                elif host_type == 'multiple':
+                    output = nmap.tcp_port_scanner(host_name.strip().split(' '))
+                elif host_type == 'sub':
+                    output = nmap.tcp_scanner_subnet(host_name)
 
             elif scan_type == 'udp':
                 if host_type == 'single':
                     output = nmap.udp_port_scanner([host_name])
                 elif host_type == 'multiple':
-                    output = nmap.udp_port_scanner(host_name)
+                    output = nmap.udp_port_scanner(host_name.strip().split(' '))
                 elif host_type == 'sub':
                     output = nmap.udp_port_scanner_subnet(host_name)
 
@@ -62,7 +66,7 @@ def display_result(request):
                 if host_type == 'single':
                     output = nmap.os_detection([host_name])
                 elif host_type == 'multiple':
-                    output = nmap.os_detection(host_name)
+                    output = nmap.os_detection(host_name.strip().split(' '))
                 elif host_type == 'sub':
                     output = nmap.os_detection_subnet(host_name)
 
@@ -70,10 +74,10 @@ def display_result(request):
                 if host_type == 'single':
                     output = nmap.service_detection([host_name])
                 elif host_type == 'multiple':
-                    output = nmap.service_detection(host_name)
+                    output = nmap.service_detection(host_name.strip().split(' '))
                 elif host_type == 'sub':
                     output = nmap.service_detection_subnet(host_name)
 
     # noinspection PyUnboundLocalVariable
-    return render(request, 'result_display.html', context={'data': [scan_type, host_name, host_type, port],
+    return render(request, 'result_display.html', context={'data': [scan_type, host_name, host_type],
                                                            'result': output})

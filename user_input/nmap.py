@@ -10,6 +10,7 @@ subprocess.call('clear', shell=True)
 
 def tcp_port_scanner(remoteServer:list):
 	t1 = datetime.now()
+	output = []
 	for host in remoteServer:
 		remoteServerIP  = socket.gethostbyname(host)
 		try:
@@ -17,16 +18,17 @@ def tcp_port_scanner(remoteServer:list):
 				sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 				result = sock.connect_ex((remoteServerIP, port))
 				if result == 0:
-					print("Port {}: 	 Open".format(port))
+					output.append("Port {}: 	 Open".format(port))
 				sock.close()
 		except socket.gaierror:
-			print('Hostname could not be resolved. Exiting')
-			sys.exit()
+			return ['Hostname could not be resolved. Exiting']
 		except socket.error:
-			print("Couldn't connect to server")
-			sys.exit()
+			return ["Couldn't connect to server"]
 		t2 = datetime.now()
 		time = t2-t1
+		output.append(f'Scanning completed in {time}')
+		return output
+
 
 
 def tcp_scanner_subnet(host_subnet:str):
