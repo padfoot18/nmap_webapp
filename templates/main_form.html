@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+    <div>
+    <h3>Enter details for scanning:</h3>
+    </div>
     <form action="/results/" method="post">
         <div class="form-group">
             {% csrf_token %}
