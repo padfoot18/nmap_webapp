@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.forms import Form, Select, ChoiceField, CharField, TextInput, IntegerField, NumberInput
-from django.http import HttpResponseRedirect
 
 
 class UserInputForm(Form):
