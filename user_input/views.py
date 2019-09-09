@@ -80,4 +80,4 @@ def display_result(request):
 
     # noinspection PyUnboundLocalVariable
     print(output)
-    return render(request, 'result_display.html', context={'result': zip(output, command)})
+    return render(request, 'result_display.html', context={'result': zip(output, command), 'hostname': host_name})

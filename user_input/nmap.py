@@ -38,18 +38,23 @@ def tcp_scanner_subnet(host_subnet:str):
 	"""
 	WORKS FOR A SUBNET
 	"""
+	output = []
+	command = []
 	for ip in IPNetwork(host_subnet):
-		tcp_port_scanner([str(ip)])
-
+		op, cmd = tcp_port_scanner([str(ip)])
+		output.append(op)
+		command.append(cmd)
+	return output, command
 
 def host_discovery(address: list):
 	"""	
 	WORKS FOR SINGLE AND MULTIPLE IP's
 	"""
 	output = []
-	command =[]
+	command = []
 	FNULL = open(os.devnull, 'w')
 	for addr in address:
+		print(addr)
 		res = subprocess.call(['ping', '-q', '-c', '3', addr], stdout=FNULL)
 		command.append('nmap -sL ' + addr)
 		if res == 0: 
@@ -68,8 +73,13 @@ def host_discovery_subnet(host_subnet:str):
 	"""
 	WORKS FOR A SUBNET
 	"""
+	output = []
+	command = []
 	for ip in IPNetwork(host_subnet):
-		host_discovery([str(ip)])
+		op, cmd = host_discovery([str(ip)])
+		output.append(op)
+		command.append(cmd)
+	return output, command
 
 
 def udp_port_scanner(hosts:list): 
@@ -79,6 +89,7 @@ def udp_port_scanner(hosts:list):
 	output = []
 	command = []
 	for host in hosts:
+		print(host)
 		os = subprocess.check_output(['nmap', '-sU', host])
 		command.append('nmap -sU ' + host)
 		output_list = str(os).split('\\n')
@@ -90,8 +101,13 @@ def udp_port_scanner_subnet(host_subnet:str):
 	"""
 	WORKS FOR A SUBNET
 	"""
+	output = []
+	command = []
 	for ip in IPNetwork(host_subnet):
-		udp_port_scanner([str(ip)])
+		op, cmd = udp_port_scanner([str(ip)])
+		output.append(op)
+		command.append(cmd)
+	return output, command
 
 
 def os_detection(hosts:list):
@@ -101,6 +117,7 @@ def os_detection(hosts:list):
 	output = []
 	command = []
 	for host in hosts:
+		print(host)
 		os = subprocess.check_output(['sudo', 'nmap', '-O', host])
 		command.append('sudo nmap -O ' + host)
 		for line in str(os).split('\\n'):
@@ -113,8 +130,13 @@ def os_detection_subnet(host_subnet:str):
 	"""
 	WORKS FOR A SUBNET
 	"""
+	output = []
+	command = []
 	for ip in IPNetwork(host_subnet):
-		os_detection([str(ip)])
+		op, cmd = os_detection([str(ip)])
+		output.append(op)
+		command.append(cmd)
+	return output, command
 
 
 def service_detection(hosts:list):
@@ -124,6 +146,7 @@ def service_detection(hosts:list):
 	output = []
 	command = []
 	for host in hosts:
+		print(host)
 		os = subprocess.check_output(['nmap', '-sV', host])
 		command.append('nmap -sV ' + host)
 		output_list = str(os).split('\\n')
@@ -135,8 +158,13 @@ def service_detection_subnet(host_subnet:str):
 	"""
 	WORKS FOR A SUBNET
 	"""
+	output = []
+	command = []
 	for ip in IPNetwork(host_subnet):
-		service_detection([str(ip)])
+		op, cmd = service_detection([str(ip)])
+		output.append(op)
+		command.append(cmd)
+	return output, command
 
 
 if __name__ == '__main__':
