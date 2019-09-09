@@ -90,7 +90,7 @@ def udp_port_scanner(hosts:list):
 	command = []
 	for host in hosts:
 		print(host)
-		os = subprocess.check_output(['nmap', '-sU', host])
+		os = subprocess.check_output(['nmap', '-sU', '--min-rate', '8000', host])
 		command.append('nmap -sU ' + host)
 		output_list = str(os).split('\\n')
 		output.append('\n'.join(output_list[5:-2]))
@@ -105,8 +105,9 @@ def udp_port_scanner_subnet(host_subnet:str):
 	command = []
 	for ip in IPNetwork(host_subnet):
 		op, cmd = udp_port_scanner([str(ip)])
-		output.append(op)
-		command.append(cmd)
+		if op[0] != '':
+			output.append(op[0])
+		command.append(cmd[0])
 	return output, command
 
 
@@ -118,7 +119,7 @@ def os_detection(hosts:list):
 	command = []
 	for host in hosts:
 		print(host)
-		os = subprocess.check_output(['sudo', 'nmap', '-O', host])
+		os = subprocess.check_output(['sudo', 'nmap', '-O', '--min-rate', '8000',host])
 		command.append('sudo nmap -O ' + host)
 		for line in str(os).split('\\n'):
 			if line.startswith('Running') or line.startswith('Aggressive'):
@@ -134,8 +135,9 @@ def os_detection_subnet(host_subnet:str):
 	command = []
 	for ip in IPNetwork(host_subnet):
 		op, cmd = os_detection([str(ip)])
-		output.append(op)
-		command.append(cmd)
+		if op[0] != '':
+			output.append(op[0])
+		command.append(cmd[0])
 	return output, command
 
 
@@ -147,7 +149,7 @@ def service_detection(hosts:list):
 	command = []
 	for host in hosts:
 		print(host)
-		os = subprocess.check_output(['nmap', '-sV', host])
+		os = subprocess.check_output(['nmap', '-sV', '--min-rate', '8000', host])
 		command.append('nmap -sV ' + host)
 		output_list = str(os).split('\\n')
 		output.append('\n'.join(output_list[5:10]))
@@ -162,7 +164,8 @@ def service_detection_subnet(host_subnet:str):
 	command = []
 	for ip in IPNetwork(host_subnet):
 		op, cmd = service_detection([str(ip)])
-		output.append(op)
+		if op[0] != '':
+			output.append(op)
 		command.append(cmd)
 	return output, command
 
