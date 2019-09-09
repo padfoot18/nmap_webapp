@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.forms import Form, Select, ChoiceField, CharField, TextInput, IntegerField, NumberInput
+from user_input import nmap
 
 
 class UserInputForm(Form):
     SCAN_TYPE_CHOICES = (
         ('hd', 'Host Discovery'),
-        ('ps', 'Port Scan'),
         ('tcp', 'TCP Scan'),
         ('udp', 'UDP Scan'),
         ('os', 'Remote OS Detection'),
@@ -13,13 +13,12 @@ class UserInputForm(Form):
     )
     HOST_TYPE_CHOICES = (
         ('single', 'Single Host'),
-        ('range', 'Range of hosts'),
+        ('multiple', 'Multiple hosts separated by space'),
         ('sub' ,'Subnet')
     )
     scan_type = ChoiceField(widget=Select(attrs={'class': 'form-control'}), choices=SCAN_TYPE_CHOICES)
     host_type = ChoiceField(widget=Select(attrs={'class': 'form-control'}), choices=HOST_TYPE_CHOICES)
     host_name = CharField(widget=TextInput(attrs={'class': 'form-control'}), required=True)
-    port = IntegerField(widget=NumberInput(attrs={'class': 'form-control', 'min': '1', 'max': '65535'}), required=False)
 
 
 def get_user_input(request):
@@ -40,5 +39,41 @@ def display_result(request):
             host_name = form.cleaned_data['host_name']
             port = form.cleaned_data['port']
 
+            if scan_type == 'hd':
+                if host_type == 'single':
+                    output = nmap.host_discovery([host_name])
+                elif host_type == 'multiple':
+                    output = nmap.host_discovery(host_name)
+                elif host_type == 'sub':
+                    output = nmap.host_discovery_subnet(host_name)
+
+            elif scan_type == 'tcp':
+                output = nmap.tcp_port_scanner()
+
+            elif scan_type == 'udp':
+                if host_type == 'single':
+                    output = nmap.udp_port_scanner([host_name])
+                elif host_type == 'multiple':
+                    output = nmap.udp_port_scanner(host_name)
+                elif host_type == 'sub':
+                    output = nmap.udp_port_scanner_subnet(host_name)
+
+            elif scan_type == 'os':
+                if host_type == 'single':
+                    output = nmap.os_detection([host_name])
+                elif host_type == 'multiple':
+                    output = nmap.os_detection(host_name)
+                elif host_type == 'sub':
+                    output = nmap.os_detection_subnet(host_name)
+
+            elif scan_type == 'sd':
+                if host_type == 'single':
+                    output = nmap.service_detection([host_name])
+                elif host_type == 'multiple':
+                    output = nmap.service_detection(host_name)
+                elif host_type == 'sub':
+                    output = nmap.service_detection_subnet(host_name)
+
     # noinspection PyUnboundLocalVariable
-    return render(request, 'result_display.html', context={'data': [scan_type, host_name, host_type, port]})
+    return render(request, 'result_display.html', context={'data': [scan_type, host_name, host_type, port],
+                                                           'result': output})

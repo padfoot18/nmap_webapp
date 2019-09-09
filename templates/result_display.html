@@ -3,9 +3,21 @@
     <div>
     <h3>Results:</h3>
     </div>
-<ul>
-    {% for input in data %}
-      <li>{{ input }}</li>
-    {% endfor %}
-  </ul>
+    <div>
+        <ul>
+            {% for input in data %}
+              <li>{{ input }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+    <ul class="list-unstyled">
+        {% for line in result %}
+            {{ line }}
+        {% endfor %}
+    </ul>
+    </div>
+    <div>
+        <a href="/"><button class="btn btn-primary">Scan Again</button></a>
+    </div>
 {% endblock %}

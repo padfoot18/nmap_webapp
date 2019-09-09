@@ -139,18 +139,19 @@ def service_detection_subnet(host_subnet:str):
 		service_detection([str(ip)])
 
 
-print('HOST DISCOVERY')
-host_discovery(['localhost', 'localhost', '127.0.0.1'])
-host_discovery_subnet('127.0.0.0/24')
+if __name__ == '__main__':
+	print('HOST DISCOVERY')
+	host_discovery(['localhost', 'localhost', '127.0.0.1'])
+	host_discovery_subnet('127.0.0.0/24')
 
-print('OS DETECTION')
-os_detection(['localhost', 'localhost', '127.0.0.1'])
-os_detection_subnet('127.0.0.0/24')
+	print('OS DETECTION')
+	os_detection(['localhost', 'localhost', '127.0.0.1'])
+	os_detection_subnet('127.0.0.0/24')
 
-print('SERVICE DETECTION')
-service_detection(['localhost', 'localhost', '127.0.0.1'])
-service_detection_subnet('127.0.0.0/24')
+	print('SERVICE DETECTION')
+	service_detection(['localhost', 'localhost', '127.0.0.1'])
+	service_detection_subnet('127.0.0.0/24')
 
-print('UDP PORT SCANNER')
-udp_port_scanner(['localhost', 'localhost', '127.0.0.1'])
-udp_port_scanner_subnet('127.0.0.0/24')
+	print('UDP PORT SCANNER')
+	udp_port_scanner(['localhost', 'localhost', '127.0.0.1'])
+	udp_port_scanner_subnet('127.0.0.0/24')
