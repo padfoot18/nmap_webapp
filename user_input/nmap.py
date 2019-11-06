@@ -165,8 +165,8 @@ def service_detection_subnet(host_subnet:str):
 	for ip in IPNetwork(host_subnet):
 		op, cmd = service_detection([str(ip)])
 		if op[0] != '':
-			output.append(op)
-		command.append(cmd)
+			output.append(op[0])
+		command.append(cmd[0])
 	return output, command
 
 
