@@ -135,9 +135,9 @@ def os_detection_subnet(host_subnet:str):
 	command = []
 	for ip in IPNetwork(host_subnet):
 		op, cmd = os_detection([str(ip)])
-		if op[0] != '':
-			output.append(op[0])
-		command.append(cmd[0])
+		if op is not None:
+			output.append(op)
+		command.append(cmd)
 	return output, command
 
 
